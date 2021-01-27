@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Ольга](https://up.htmlacademy.ru/javascript/22/user/1543349).
-* Наставник: `Неизвестно`.
+* Наставник: [Денис Горшков](https://htmlacademy.ru/profile/satrasmatras).
 
 ---
 
