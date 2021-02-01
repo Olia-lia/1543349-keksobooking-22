@@ -3,22 +3,18 @@
 const getRandomInteger = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
-  let ErrorMessage = 'Значения введены неверно!';
+  const errorMessage = 'Значения введены неверно!';
 
   if (min < 0 || max < 0) {
-    throw new Error(ErrorMessage + ' Значения не могут быть отрицательными.');
+    throw new Error(errorMessage + ' Значения не могут быть отрицательными.');
   }
 
   if (min >= max) {
-    throw new Error(ErrorMessage + ' Верхнее значение диапазона должно быть больше нижнего.' );
+    throw new Error(errorMessage + ' Верхнее значение диапазона должно быть больше нижнего.' );
   }
-
-  else {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-getRandomInteger();
 
 const getRandomFloat = (min, max, lengthOfTail) => {
   getRandomInteger(min, max);
