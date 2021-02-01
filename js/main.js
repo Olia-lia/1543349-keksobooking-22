@@ -1,44 +1,33 @@
-'use strict'
+'use strict';
 
-//Функция, возвращающая случайное число
-
-const getRandom = function (min, max) {
+const getRandomInteger = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
+  let ErrorMessage = 'Значения введены неверно!';
 
-  if (min < 0 || max < 0 && min < 0 && max < 0) {
-    alert('Значения не могут быть отрицательными! Введите то же самое, только без минуса');
-    return undefined;
+  if (min < 0 || max < 0) {
+    throw new Error(ErrorMessage + ' Значения не могут быть отрицательными.');
   }
 
   if (min >= max) {
-    alert('Верхнее значение диапазона должно быть больше нижнего!');
-    return undefined;
+    throw new Error(ErrorMessage + ' Верхнее значение диапазона должно быть больше нижнего.' );
   }
 
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  else {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 };
 
-getRandom(100, 500);
+getRandomInteger();
 
-//Функция, возвращающая случайное число с плавающей точкой
-
-const getRandomFloat = function (min, max, lengthOfTail) {
-  if (min < 0 || max < 0 && min < 0 && max < 0) {
-    alert('Аттеншн! Значения не могут быть отрицательными');
-    return undefined;
-  }
-
-  if (min >= max) {
-    alert('Аттеншн! Верхнее значение диапазона должно быть больше нижнего!');
-    return undefined;
-  }
+const getRandomFloat = (min, max, lengthOfTail) => {
+  getRandomInteger(min, max);
 
   min = Math.ceil(min * Math.pow(10, lengthOfTail));
   max = Math.round(max * Math.pow(10, lengthOfTail));
 
-  const RandomNumber =  Math.floor(Math.random() * (max - min + 1)) + min;
-  return RandomNumber / Math.pow(10, lengthOfTail);
+  const randomNumber = getRandomInteger(min, max);
+  return randomNumber / Math.pow(10, lengthOfTail);
 }
 
 getRandomFloat();
