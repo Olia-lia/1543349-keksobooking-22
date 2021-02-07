@@ -10,7 +10,7 @@ const getRandomInteger = (min, max) => {
   }
 
   if (min >= max) {
-    throw new Error(errorMessage + min + max + ' Верхнее значение диапазона должно быть больше нижнего.' );
+    throw new Error(errorMessage + ' Верхнее значение диапазона должно быть больше нижнего.');
   }
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
