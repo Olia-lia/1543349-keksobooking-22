@@ -42,64 +42,73 @@ const PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg',
 ];
+const MIN_AVATAR_COUNT = 1;
+const MAX_AVATAR_COUNT = 8;
+const MIN_PRICE = 0;
+const MAX_PRICE = 1000000;
+const MIN_ROOMS = 1;
+const MAX_ROOMS = 100;
+const MIN_GUESTS = 1;
+const MAX_GUESTS = 100;
+const MIN_LATITUDE = 35.65;
+const MAX_LATITUDE = 35.70;
+const MIN_LONGITUDE = 139.7;
+const MAX_LONGITUDE = 139.8;
+const TOTAL_OFFERS = 10;
 
 const getRandomArrayElement = (array) => {
   return array[getRandomInteger(0, array.length - 1)];
 };
 
 const getArrayOfRandomLength = (array) => {
-  return array.filter(() => Boolean(getRandomInteger(0, array.length)));
+  return array.filter(() => Boolean(getRandomInteger(0, 1)));
 };
 
 const generateRentalOffer = () => {
-  const avatar = 'img/avatars/user' + 0 + getRandomInteger(1, 8) + '.png';
+  const avatar = `img/avatars/user0${getRandomInteger(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT)}.png`;
   const title = getRandomArrayElement(TITLES);
-  const price = getRandomInteger(0, 1000000);
+  const price = getRandomInteger(MIN_PRICE, MAX_PRICE);
   const type = getRandomArrayElement(TYPES);
-  const rooms = getRandomInteger(0, 100);
-  const guests = getRandomInteger(0, 100);
-  const checkin = getRandomArrayElement(CHECKS);
-  const checkout = getRandomArrayElement(CHECKS);
+  const rooms = getRandomInteger(MIN_ROOMS, MAX_ROOMS);
+  const guests = getRandomInteger(MIN_GUESTS, MAX_GUESTS);
+  const checkTime = getRandomArrayElement(CHECKS);
   const features = getArrayOfRandomLength(FEATURES);
   const description = getRandomArrayElement(DESCRIPTION);
   const photos = getArrayOfRandomLength(PHOTOS);
-  const getLocation = ({x, y}) => {
-    return (x + ', ' + y);
-  };
   const location = {
-    x: getRandomFloat(35.65, 35.70, 5),
-    y: getRandomFloat(139.70, 139.80, 5),
+    x: getRandomFloat(MIN_LATITUDE, MAX_LATITUDE, 5),
+    y: getRandomFloat(MIN_LONGITUDE, MAX_LONGITUDE, 5),
   };
-  const adress = getLocation(location);
+  const adress = `${location.x}, ${location.y}`;
 
   return {
     author: {
-      avatar: avatar,
+      avatar,
     },
     offer: {
-      title: title,
-      adress: adress,
-      price: price,
-      type: type,
-      rooms: rooms,
-      guests: guests,
-      checkin: checkin,
-      checkout: checkout,
-      features: features,
-      description: description,
-      photos: photos,
+      title,
+      adress,
+      price,
+      type,
+      rooms,
+      guests,
+      checkin: checkTime,
+      checkout: checkTime,
+      features,
+      description,
+      photos,
     },
-    location: location,
+    location,
   }
 }
 
-const createRentalOfferArray = () => {
-  let result = new Array();
-  for (let i = 0; i < 10; i++) {
+const createRentalOfferArray = (TOTAL_OFFERS) => {
+  const result = [];
+  for (let i = 0; i < TOTAL_OFFERS; i++) {
     const rentalOffer = generateRentalOffer(i);
     result.push(rentalOffer);
   }
   return result;
 };
 
-createRentalOfferArray();
+(createRentalOfferArray(TOTAL_OFFERS));
