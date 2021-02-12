@@ -1,5 +1,4 @@
-import './data.js';
-import {TOTAL_OFFERS, generateRentalOffer} from './data.js';
+import {createRentalOffers} from './data.js';
 
-const createRentalOfferArray = new Array(TOTAL_OFFERS).fill(null).map(() => generateRentalOffer());
-createRentalOfferArray;
+const TOTAL_OFFERS = 10;
+createRentalOffers(TOTAL_OFFERS);

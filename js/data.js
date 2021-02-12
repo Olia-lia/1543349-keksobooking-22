@@ -31,7 +31,6 @@ const MIN_LATITUDE = 35.65;
 const MAX_LATITUDE = 35.70;
 const MIN_LONGITUDE = 139.7;
 const MAX_LONGITUDE = 139.8;
-const TOTAL_OFFERS = 10;
 
 const generateRentalOffer = () => {
   const avatar = `img/avatars/user0${getRandomInteger(MIN_AVATAR_COUNT, MAX_AVATAR_COUNT)}.png`;
@@ -48,7 +47,7 @@ const generateRentalOffer = () => {
     x: getRandomFloat(MIN_LATITUDE, MAX_LATITUDE, 5),
     y: getRandomFloat(MIN_LONGITUDE, MAX_LONGITUDE, 5),
   };
-  const adress = `${location.x}, ${location.y}`;
+  const address = `${location.x}, ${location.y}`;
 
   return {
     author: {
@@ -56,7 +55,7 @@ const generateRentalOffer = () => {
     },
     offer: {
       title,
-      adress,
+      address,
       price,
       type,
       rooms,
@@ -71,13 +70,13 @@ const generateRentalOffer = () => {
   }
 }
 
-/*const createRentalOfferArray = (TOTAL_OFFERS) => {
+const createRentalOffers = (n) => {
   const result = [];
-  for (let i = 0; i < TOTAL_OFFERS; i++) {
+  for (let i = 0; i < n; i++) {
     const rentalOffer = generateRentalOffer(i);
     result.push(rentalOffer);
   }
   return result;
-};*/
+};
 
-export {generateRentalOffer, TOTAL_OFFERS};
+export {createRentalOffers};
