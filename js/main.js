@@ -1,4 +1,6 @@
 import {createRentalOffers} from './data.js';
+import {renderingSimilarOffer} from './similar-offers.js';
 
-const TOTAL_OFFERS = 10;
-createRentalOffers(TOTAL_OFFERS);
+createRentalOffers();
+
+renderingSimilarOffer;
