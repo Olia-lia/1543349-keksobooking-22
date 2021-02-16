@@ -1,6 +1,11 @@
 import {createRentalOffers} from './data.js';
-import {renderingSimilarOffer} from './similar-offers.js';
+import {generateCards, renderCard} from './card.js';
 
-createRentalOffers();
+const TOTAL_OFFERS = 10;
 
-renderingSimilarOffer;
+const offers = createRentalOffers(TOTAL_OFFERS);
+
+const cardElements = generateCards(offers);
+
+renderCard(cardElements[0]);
+
