@@ -5,7 +5,7 @@ const priceInput = form.querySelector('#price');
 const checkoutSelect = form.querySelector('#timeout');
 const checkinSelect = form.querySelector('#timein');
 
-const minPriceNight = {
+const MinPriceNight = {
   bungalow: 0,
   flat: 1000,
   house: 5000,
@@ -13,20 +13,31 @@ const minPriceNight = {
 }
 
 const onPriceInputSelect = () => {
-  priceInput.setAttribute('min', priceInput.placeholder);
-
-  typeSelect.addEventListener('change', () => {
-    priceInput.min = minPriceNight[typeSelect.value];
-    priceInput.placeholder = priceInput.min;
-  });
+  const minPrice = MinPriceNight[typeSelect.value];
+  priceInput.min = minPrice;
+  priceInput.placeholder = minPrice;
 }
 
-onPriceInputSelect();
+const addPriceListener = () => {
+  priceInput.setAttribute('min', MinPriceNight[typeSelect.value]);
 
-checkoutSelect.addEventListener('input', () => {
-  checkinSelect.value = checkoutSelect.value;
-});
+  typeSelect.addEventListener('change', onPriceInputSelect);
+};
 
-checkinSelect.addEventListener('input', () => {
-  checkoutSelect.value = checkinSelect.value;
-});
+const addCheckTimeHandler = () => {
+
+  checkoutSelect.addEventListener('change', () => {
+    checkinSelect.value = checkoutSelect.value;
+  });
+
+  checkinSelect.addEventListener('change', () => {
+    checkoutSelect.value = checkinSelect.value;
+  });
+};
+
+const addFormHandlers = () => {
+  addPriceListener();
+  addCheckTimeHandler();
+}
+
+export {addFormHandlers};
