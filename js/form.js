@@ -1,9 +1,9 @@
-
 const form = document.querySelector('.ad-form');
 const typeSelect = form.querySelector('#type');
 const priceInput = form.querySelector('#price');
 const checkoutSelect = form.querySelector('#timeout');
 const checkinSelect = form.querySelector('#timein');
+
 
 const MinPriceNight = {
   bungalow: 0,

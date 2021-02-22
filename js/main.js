@@ -1,16 +1,20 @@
 import {createRentalOffers} from './data.js';
-import {generateCards, renderCard} from './card.js';
+//import {generateCard} from './card.js';
 import {addFormHandlers} from './form.js';
+import {unloadedPage} from './page.js';
+import './map.js';
+import {addMapHandlers, map, renderOffersPin} from './map.js';
 
-const TOTAL_OFFERS = 10;
-
-const offers = createRentalOffers(TOTAL_OFFERS);
-
-const cardElements = generateCards(offers);
-
-renderCard(cardElements[0]);
-
+unloadedPage();
+addMapHandlers();
 addFormHandlers();
 
+map.setView({
+  lat: 35.68950,
+  lng: 139.69171,
+}, 10);
 
+const TOTAL_OFFERS = 10;
+const offers = createRentalOffers(TOTAL_OFFERS);
+renderOffersPin(offers);
 
