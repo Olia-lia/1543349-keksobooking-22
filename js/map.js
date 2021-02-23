@@ -60,15 +60,22 @@ const mainIconMarker = L.marker(
 
 mainIconMarker.addTo(map);
 
-
-
-const addMarkerMousemove = () => mainIconMarker.on('mousemove', (evt) => {
+const onMarkerMove = (evt) => {
   const {lat, lng} = evt.target.getLatLng();
   addressInput.value = `${getRandomFloat(lat ,lat, 5)}, ${getRandomFloat(lng, lng, 5)}`;
-});
+};
+
+const addMarkerMouseHandler = () => {
+  mainIconMarker.on('mousemove', onMarkerMove);
+};
+
+const addMarkerMoveendHandler = () => {
+  mainIconMarker.on('moveend', onMarkerMove);
+};
 
 const addMarkerMoveHandlers = () => {
-  mainIconMarker.on('moveend', addMarkerMousemove);
+  addMarkerMouseHandler();
+  addMarkerMoveendHandler();
 }
 
 const renderOffersPin = (offers) => {
