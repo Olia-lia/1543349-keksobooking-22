@@ -1,26 +1,15 @@
-const form = document.querySelector('.ad-form');
-const formElements = form.querySelectorAll('.ad-form__element');
-const filter = document.querySelector('.map__filters');
-const filterElements = filter.querySelectorAll('.map__filter');
+import {disableFilter, activateFilter} from  './filter.js';
+import {disableForm, activateForm} from './form.js';
 
-const unloadedPage = () => {
-  form.classList.add('ad-form--disabled');
-  [...formElements].forEach((formElement) => {
-    formElement.setAttribute('disabled', 'disabled');});
-  filter.classList.add('map__filters--disabled');
-  [...filterElements].forEach((filterElement) => {
-    filterElement.setAttribute('disabled', 'disabled');});
+
+const disablePage = () => {
+  disableFilter();
+  disableForm();
 }
 
-const loadedPage = () => {
-  form.classList.remove('ad-form--disabled');
-  [...formElements].forEach((formElement) => {
-    formElement.removeAttribute('disabled', 'disabled');});
-  filter.classList.remove('map__filters--disabled');
-  [...filterElements].forEach((filterElement) => {
-    filterElement.removeAttribute('disabled', 'disabled');});
-
+const activatePage = () => {
+  activateForm();
+  activateFilter();
 }
 
-
-export {unloadedPage, loadedPage};
+export {disablePage, activatePage};
