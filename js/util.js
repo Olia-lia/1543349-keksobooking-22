@@ -7,7 +7,7 @@ const getRandomInteger = (min, max) => {
     throw new Error(errorMessage + ' Значения не могут быть отрицательными.');
   }
 
-  if (min > max) {
+  if (min >= max) {
     throw new Error(errorMessage + ' Верхнее значение диапазона должно быть больше нижнего.');
   }
   return Math.floor(Math.random() * (max - min + 1)) + min;

@@ -1,10 +1,7 @@
-import {getRandomFloat} from './util.js';
-import {activatePage} from './page.js';
 import {generateCard} from './card.js';
-/* global L:readonly */
+import {getAddress} from './form.js';
 
-const form = document.querySelector('.ad-form');
-const addressInput = form.querySelector('#address');
+/* global L:readonly */
 
 const INITIAL_MAP_OPTIONS = {
   lat: 35.68950,
@@ -12,8 +9,8 @@ const INITIAL_MAP_OPTIONS = {
 };
 const ZOOM_MAP = 10;
 const INITIAL_MAIN_PIN_POSITION = {
-  lat: 35.6859,
-  lng: 139.692,
+  lat: 35.68591,
+  lng: 139.69212,
 };
 
 const MAIN_PIN_OPTIONS = {
@@ -32,13 +29,27 @@ const PIN_OPTIONS = {
 
 const map = L.map('map-canvas');
 
-const addMapHandlers = () => {
-  map.on('load', activatePage);
+const mainIcon = L.icon(MAIN_PIN_OPTIONS);
+const mainIconMarker = L.marker(
+  INITIAL_MAIN_PIN_POSITION,
+  {
+    draggable: true,
+    icon: mainIcon,
+  });
+
+const onMarkerMove = (evt) => {
+  const {lat, lng} = evt.target.getLatLng();
+  getAddress(lat, lng);
+};
+
+const addMarkerMoveHandlers = () => {
+  mainIconMarker.on('drag', onMarkerMove);
+  mainIconMarker.on('moveend', onMarkerMove);
 }
 
-const initializeMap = () => {
-  addMapHandlers();
+const initializeMap = (activate) => {
 
+  map.onload;
   map.setView(INITIAL_MAP_OPTIONS, ZOOM_MAP);
 
   L.tileLayer(
@@ -47,36 +58,16 @@ const initializeMap = () => {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
   ).addTo(map);
-}
 
-const mainIcon = L.icon(MAIN_PIN_OPTIONS);
 
-const mainIconMarker = L.marker(
-  INITIAL_MAIN_PIN_POSITION,
-  {
-    draggable: true,
-    icon: mainIcon,
-  });
+  mainIconMarker.addTo(map);
+  const {lat, lng} = INITIAL_MAIN_PIN_POSITION;
+  getAddress (lat, lng);
 
-mainIconMarker.addTo(map);
-
-const onMarkerMove = (evt) => {
-  const {lat, lng} = evt.target.getLatLng();
-  addressInput.value = `${getRandomFloat(lat ,lat, 5)}, ${getRandomFloat(lng, lng, 5)}`;
+  addMarkerMoveHandlers();
+  activate();
 };
 
-const addMarkerMouseHandler = () => {
-  mainIconMarker.on('mousemove', onMarkerMove);
-};
-
-const addMarkerMoveendHandler = () => {
-  mainIconMarker.on('moveend', onMarkerMove);
-};
-
-const addMarkerMoveHandlers = () => {
-  addMarkerMouseHandler();
-  addMarkerMoveendHandler();
-}
 
 const renderOffersPin = (offers) => {
   offers.forEach((offer) => {
@@ -96,5 +87,4 @@ const renderOffersPin = (offers) => {
   });
 }
 
-
-export {map, addMarkerMoveHandlers, initializeMap, renderOffersPin};
+export {initializeMap, renderOffersPin};
