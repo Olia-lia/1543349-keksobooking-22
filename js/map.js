@@ -75,8 +75,8 @@ const renderOffersPin = (offers) => {
 
     const marker = L.marker(
       {
-        lat: offer.location.x,
-        lng: offer.location.y,
+        lat: offer.location.lat,
+        lng: offer.location.lng,
       },
       {
         icon,
