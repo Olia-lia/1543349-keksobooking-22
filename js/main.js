@@ -1,17 +1,31 @@
-import {addFormHandlers} from './form.js';
+import {addFormHandlers, addResutButtonHandler} from './form.js';
 import {disablePage, activatePage} from './page.js';
-import {initializeMap, renderOffersPin} from './map.js';
-import './server.js';
+import {initializeMap, renderOffersPin, resetMap} from './map.js';
+import {getOffers} from './server.js';
+
+
+const TOTAL_OFFERS = 10;
+
+const resetPage = () => {
+  resetMap();
+}
+
 
 disablePage();
 initializeMap(activatePage);
+
+getOffers((offers) => {
+  renderOffersPin(offers.slice(0, TOTAL_OFFERS))
+});
+
+
 addFormHandlers();
 
-
-//const TOTAL_OFFERS = 10;
-//const offers = createRentalOffers(TOTAL_OFFERS);
+addResutButtonHandler(resetPage);
 
 
 
-//renderOffersPin(offers);
+
+
+
 

@@ -30,6 +30,7 @@ const PIN_OPTIONS = {
 const map = L.map('map-canvas');
 
 const mainIcon = L.icon(MAIN_PIN_OPTIONS);
+
 const mainIconMarker = L.marker(
   INITIAL_MAIN_PIN_POSITION,
   {
@@ -37,19 +38,18 @@ const mainIconMarker = L.marker(
     icon: mainIcon,
   });
 
+
 const onMarkerMove = (evt) => {
   const {lat, lng} = evt.target.getLatLng();
   getAddress(lat, lng);
 };
 
-const addMarkerMoveHandlers = () => {
-  mainIconMarker.on('drag', onMarkerMove);
-  mainIconMarker.on('moveend', onMarkerMove);
-}
+const initializeMap = (activateCallBack) => {
 
-const initializeMap = (activate) => {
+  map.on('load', ()  => {
+    activateCallBack();
+  });
 
-  map.onload;
   map.setView(INITIAL_MAP_OPTIONS, ZOOM_MAP);
 
   L.tileLayer(
@@ -61,11 +61,11 @@ const initializeMap = (activate) => {
 
 
   mainIconMarker.addTo(map);
+  mainIconMarker.on('drag', onMarkerMove);
+  mainIconMarker.on('moveend', onMarkerMove);
+
   const {lat, lng} = INITIAL_MAIN_PIN_POSITION;
   getAddress (lat, lng);
-
-  addMarkerMoveHandlers();
-  activate();
 };
 
 
@@ -87,4 +87,10 @@ const renderOffersPin = (offers) => {
   });
 }
 
-export {initializeMap, renderOffersPin};
+const resetMap = () => {
+  mainIconMarker.setLatLng(INITIAL_MAIN_PIN_POSITION);
+  initializeMap();
+}
+
+
+export {initializeMap, renderOffersPin, resetMap};

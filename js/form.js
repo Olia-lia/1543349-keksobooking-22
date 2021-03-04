@@ -1,3 +1,6 @@
+import {sendForm} from './server.js';
+import {resetMap} from './map.js';
+
 const form = document.querySelector('.ad-form');
 const formElements = form.querySelectorAll('.ad-form__element');
 const typeSelect = form.querySelector('#type');
@@ -8,6 +11,7 @@ const titleInput = form.querySelector('#title');
 const addressInput = form.querySelector('#address');
 const roomsInput = form.querySelector('#room_number');
 const capacityInput = form.querySelector('#capacity');
+const resetButton = form.querySelector('.ad-form__reset');
 
 const ROOMS_EXCEPTION = 100;
 const MIN_TITLE_LENGTH = 30;
@@ -136,14 +140,85 @@ const addRoomsInputHandlers = () => {
   onRoomsInputRemoveEvent();
 };
 
+
+const createSubmitResult = (element) => {
+  const resultTemplate = document.querySelector(`#${element}`)
+    .content.querySelector(`.${element}`)
+    .cloneNode(true);
+
+  resultTemplate.classList.add('submit-message');
+
+  const fragment = document.createDocumentFragment();
+  fragment.append(resultTemplate);
+  form.append(fragment);
+}
+
+const onResultEscKeydown = (evt) => {
+  if (evt.key === ('Escape' || 'Esc')) {
+    evt.preventDefault();
+    closeSubmitResult();
+  }
+};
+
+
+const showSubmitResult = (element) => {
+  createSubmitResult(element);
+
+  const errorButton = document.querySelector('.error__button');
+
+  document.addEventListener('keydown', onResultEscKeydown);
+  document.addEventListener('click', closeSubmitResult);
+
+
+  if (element === 'error') {
+    errorButton.addEventListener('click', closeSubmitResult);
+  }
+};
+
+const closeSubmitResult = () => {
+
+  const resultItem = form.querySelector('.submit-message');
+  if (resultItem.classList.contains('success')) {
+    form.reset();
+    resetMap();
+  }
+
+  form.removeChild(resultItem);
+
+  document.removeEventListener('keydown', onResultEscKeydown);
+  document.removeEventListener('click', closeSubmitResult);
+}
+
+const addSubmitHandler = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    sendForm(
+      () => showSubmitResult('success'),
+      () => showSubmitResult('error'),
+      new FormData(form),
+    );
+  });
+}
+
+const addResutButtonHandler = (callback) => {
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    form.reset();
+    callback();
+  });
+}
+
+
 const addFormHandlers = () => {
+
   setPricePlaceholder();
-  setSelectedCapacityValue();
+  setSelectedCapacityValue()
   addPriceListener();
   addCheckTimeHandler();
   addTitleHandler();
   addRoomsInputHandlers();
+  addSubmitHandler();
 };
 
-
-export {disableForm, activateForm, addFormHandlers, getAddress};
+export {disableForm, activateForm, addFormHandlers, getAddress, addSubmitHandler, addResutButtonHandler};

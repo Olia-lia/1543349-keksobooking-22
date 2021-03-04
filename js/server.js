@@ -1,5 +1,3 @@
-import { renderOffersPin } from './map.js';
-
 const showRequestError = (message) => {
   const errorContainer = document.createElement('div');
   errorContainer.style.zIndex = 500;
@@ -8,10 +6,10 @@ const showRequestError = (message) => {
   errorContainer.style.transform = 'translate(-50%, -50%)';
   errorContainer.style.top = '250px';
   errorContainer.style.padding = '40px 60px';
-  errorContainer.style.fontSize = '33px';
+  errorContainer.style.fontSize = '40px';
   errorContainer.style.textAlign = 'center';
   errorContainer.style.backgroundColor = 'white';
-  errorContainer.style.background = 'radial-gradient(circle at center, #ed2939 40px, #ffffff 40px)';
+  errorContainer.style.background = 'radial-gradient(circle at center, #ed2939 50px, #ffffff 50px)';
   errorContainer.textContent = message;
 
   document.body.append(errorContainer);
@@ -19,6 +17,7 @@ const showRequestError = (message) => {
     errorContainer.remove();
   }, 5000);
 }
+
 
 const checkStatus = (response) => {
   if (response.ok) {
@@ -32,42 +31,38 @@ const checkStatus = (response) => {
 }
 
 
-fetch('https://22.javascript.pages.academy/keksobooking/data',
-  {
-    method: 'GET',
-    credentials: 'same-origin',
-  },
-)
+const getOffers = (onSuccess) => {
+  fetch('https://22.javascript.pages.academy/keksobooking/data',
+  )
 
-  .then(checkStatus)
-  .then((response) => response.json())
-  .then((offers) => {
-    renderOffersPin(offers);
-  })
-  .catch((showRequestError) => (showRequestError));
+    .then(checkStatus)
+    .then((response) => response.json())
+    .then((offers) => {
+      onSuccess(offers);
+    })
+    .catch((showRequestError) => (showRequestError));
+}
 
 
+const sendForm = (onSuccess, onFail, body) => {
+  fetch('https://22.javascript.pages.academy/keksobooking',
+    {
+      method: 'POST',
+      body,
+    },
+  )
+
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        onFail();
+      }
+    })
+    .catch(() => {
+      onFail();
+    });
+};
 
 
-
-onst formData = new FormData(document.querySelector('.ad-form'))
-
-
-fetch('https://22.javascript.pages.academy/keksobooking',
-  {
-    method: 'POST',
-    //lcredentials: 'same-origin',
-    body: formData,
-  },
-)
-
-/*.then((response) => {
-  console.log(response.status);
-  console.log(response.ok);
-  return response.json();
-})
-.then((json) => {
-  console.log('Результат', json);
-})
-.catch((err) => {
-  console.error(err);*/
+export {getOffers, sendForm};
