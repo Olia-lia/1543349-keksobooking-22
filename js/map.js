@@ -1,7 +1,9 @@
 import {generateCard} from './card.js';
-import {getAddress} from './form.js';
+import {setAddress} from './form.js';
 
 /* global L:readonly */
+
+const TOTAL_OFFERS = 10;
 
 const INITIAL_MAP_OPTIONS = {
   lat: 35.68950,
@@ -41,7 +43,7 @@ const mainIconMarker = L.marker(
 
 const onMarkerMove = (evt) => {
   const {lat, lng} = evt.target.getLatLng();
-  getAddress(lat, lng);
+  setAddress(lat, lng);
 };
 
 const initializeMap = (activateCallBack) => {
@@ -65,26 +67,30 @@ const initializeMap = (activateCallBack) => {
   mainIconMarker.on('moveend', onMarkerMove);
 
   const {lat, lng} = INITIAL_MAIN_PIN_POSITION;
-  getAddress (lat, lng);
+  setAddress (lat, lng);
 };
 
 
 const renderOffersPin = (offers) => {
-  offers.forEach((offer) => {
-    const icon = L.icon(PIN_OPTIONS);
+  offers.slice()
 
-    const marker = L.marker(
-      {
-        lat: offer.location.lat,
-        lng: offer.location.lng,
-      },
-      {
-        icon,
-      },
-    );
-    marker.addTo(map)
-      .bindPopup(generateCard(offer));
-  });
+    .slice(0, TOTAL_OFFERS)
+
+    .forEach((offer) => {
+      const icon = L.icon(PIN_OPTIONS);
+
+      const marker = L.marker(
+        {
+          lat: offer.location.lat,
+          lng: offer.location.lng,
+        },
+        {
+          icon,
+        },
+      );
+      marker.addTo(map)
+        .bindPopup(generateCard(offer));
+    });
 }
 
 const resetMap = () => {

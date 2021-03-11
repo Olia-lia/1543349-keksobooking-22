@@ -29,4 +29,8 @@ const getArrayOfRandomLength = (array) => {
   return array.filter(() => Boolean(getRandomInteger(0, 1)));
 };
 
-export {getRandomInteger, getRandomFloat, getRandomArrayElement, getArrayOfRandomLength};
+const isEscEvent = (evt) => {
+  return evt.key === ('Escape' || 'Esc');
+};
+
+export {getRandomInteger, getRandomFloat, getRandomArrayElement, getArrayOfRandomLength, isEscEvent};

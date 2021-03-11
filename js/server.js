@@ -1,25 +1,8 @@
-const showRequestError = (message) => {
-  const errorContainer = document.createElement('div');
-  errorContainer.style.zIndex = 500;
-  errorContainer.style.position = 'absolute';
-  errorContainer.style.left = '50%';
-  errorContainer.style.transform = 'translate(-50%, -50%)';
-  errorContainer.style.top = '250px';
-  errorContainer.style.padding = '40px 60px';
-  errorContainer.style.fontSize = '40px';
-  errorContainer.style.textAlign = 'center';
-  errorContainer.style.backgroundColor = 'white';
-  errorContainer.style.background = 'radial-gradient(circle at center, #ed2939 50px, #ffffff 50px)';
-  errorContainer.textContent = message;
+import {showRequestError, showError, showSuccess} from './messages.js';
+const requestLink = 'https://22.javascript.pages.academy/keksobooking/data';
+const submitLink = 'https://22.javascript.pages.academy/keksobooking';
 
-  document.body.append(errorContainer);
-  setTimeout(() => {
-    errorContainer.remove();
-  }, 5000);
-}
-
-
-const checkStatus = (response) => {
+const checkStatusRequest = (response) => {
   if (response.ok) {
     return response;
   }
@@ -32,10 +15,10 @@ const checkStatus = (response) => {
 
 
 const getOffers = (onSuccess) => {
-  fetch('https://22.javascript.pages.academy/keksobooking/data',
+  fetch(requestLink,
   )
 
-    .then(checkStatus)
+    .then(checkStatusRequest)
     .then((response) => response.json())
     .then((offers) => {
       onSuccess(offers);
@@ -43,25 +26,31 @@ const getOffers = (onSuccess) => {
     .catch((showRequestError) => (showRequestError));
 }
 
+const checkStatusSubmit = (response) => {
+  if (response.ok) {
+    showSuccess();
+  }
 
-const sendForm = (onSuccess, onFail, body) => {
-  fetch('https://22.javascript.pages.academy/keksobooking',
+  else {
+    showError();
+  }
+}
+
+
+const sendForm = (body, onSuccess) => {
+  fetch(submitLink,
     {
       method: 'POST',
       body,
     },
   )
 
-    .then((response) => {
-      if (response.ok) {
-        onSuccess();
-      } else {
-        onFail();
-      }
+    .then(checkStatusSubmit)
+    .then((result) => {onSuccess(result);
     })
-    .catch(() => {
-      onFail();
-    });
+    .catch((showError) => {
+      showError();
+    })
 };
 
 

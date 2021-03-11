@@ -10,7 +10,7 @@ const getType = (type) => {
       return 'Квартира';
     case 'house':
       return 'Дом';
-    default: 'Любой тип';
+    default: 'Любой тип жилья ';
   }
 };
 
@@ -106,4 +106,4 @@ const renderCard = (cardElement) => {
   map.appendChild(cardElement);
 };
 
-export {generateCards, renderCard, generateCard};
+export {generateCards, renderCard, generateCard, getType};
