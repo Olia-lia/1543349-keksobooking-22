@@ -79,7 +79,8 @@ const renderOffersPin = (offers) => {
     markers.forEach((marker => marker.remove()));
   }
 
-  offers.slice(0, TOTAL_OFFERS)
+  offers
+    .slice(0, TOTAL_OFFERS)
     .forEach((offer) => {
       const icon = L.icon(PIN_OPTIONS);
 

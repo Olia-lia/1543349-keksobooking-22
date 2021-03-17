@@ -1,17 +1,9 @@
-import {getOffers} from './server.js';
-import {renderOffersPin} from './map.js';
+let offers = [];
+
+const setOffers = (newOffers) =>
+  offers = newOffers
+
+const getOffers = () => offers.slice();
 
 
-const setOffers = (cb) => {
-
-  getOffers((offers) => {
-    renderOffersPin(offers);
-    if (cb) {
-      cb(offers)
-    }
-  })
-}
-
-
-
-export {setOffers}
+export {setOffers, getOffers}

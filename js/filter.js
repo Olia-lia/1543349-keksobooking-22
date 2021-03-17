@@ -1,3 +1,5 @@
+import {getOffers} from './data-store.js';
+
 const filter = document.querySelector('.map__filters');
 const filterElements = filter.querySelectorAll('.map__filter');
 const typeInputFilter = filter.querySelector('#housing-type');
@@ -8,8 +10,7 @@ const roomsFilterSelect = filter.querySelector('#housing-rooms');
 const MIN_LOW_PRICE = 0;
 const MIN_MIDDLE_PRICE = 10000;
 const MIN_MAX_PRICE = 50000;
-const MAX_PRICE = 1000000;
-
+const MAX_PRICE = Infinity;
 
 const FilterPrice = {
   any: {
@@ -18,7 +19,7 @@ const FilterPrice = {
   },
   middle: {
     min: MIN_MIDDLE_PRICE,
-    max: MIN_MAX_PRICE,
+    max: MIN_MAX_PRICE - 1,
   },
   low: {
     min: MIN_LOW_PRICE,
@@ -63,6 +64,7 @@ const checkOfferPrice = (price) => {
   (price >= min && price <= max);
 }
 
+
 const checkOfferFeatures  = (features) => {
   const checkedFeatures = [...filter.querySelectorAll('.map__checkbox' && 'input:checked')].map(checkbox => checkbox.value);
   return checkedFeatures.every((feature => features.includes(feature)));
@@ -98,9 +100,9 @@ const filterOffers = (offers) => {
   return filteredOffers;
 }
 
-const addFilterHandlers = (cb, offers) => {
+const addFilterHandlers = (cb) => {
   const onFilterChange = () => {
-    const filteredOffers = filterOffers(offers);
+    const filteredOffers = filterOffers(getOffers());
     cb(filteredOffers)
   }
 
