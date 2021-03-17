@@ -1,5 +1,5 @@
 import {sendForm} from './server.js';
-import {resetPage} from './messages.js';
+import {resetPage} from './page.js';
 
 const form = document.querySelector('.ad-form');
 const formElements = form.querySelectorAll('.ad-form__element');
@@ -146,9 +146,9 @@ const resetForm = () => {
 const addSubmitHandler = () => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    form.reportValidity();
-
-    sendForm(new FormData(form))
+    if( form.reportValidity()) {
+      sendForm(new FormData(form))
+    }
   });
 }
 

@@ -1,8 +1,5 @@
 import {isEscEvent, isMouseLeftEvent} from './util.js';
-import {resetMap} from './map.js';
-import {resetForm} from './form.js';
-import {resetFilter} from './filter.js';
-import {setOffers} from './data-store.js';
+import {resetPage} from './page.js';
 
 const closeButton = document.querySelector('.error__button');
 
@@ -33,12 +30,7 @@ const showRequestError = (message) => {
   }, SHOW_REQUEST_TIME);
 }
 
-const resetPage = () => {
-  resetForm();
-  resetMap();
-  resetFilter();
-  setOffers();
-}
+
 
 const showMessage = (messageType) => {
   const resultTemplate = document.querySelector(`#${messageType}`)
@@ -55,11 +47,9 @@ const showMessage = (messageType) => {
   const removeTemplate = () => {
     resultTemplate.remove();
 
-    if (resultTemplate.classList.contains(MessageTypes.success)) {
-      resetPage();
-    }
+    resultTemplate.classList.contains(MessageTypes.success) ? resetPage() :
+      closeButton.removeEventListener('click', onButtonCloseClick);
 
-    closeButton.removeEventListener('click', onButtonCloseClick);
     document.removeEventListener('keydown', onDocumentEscapePressed);
     document.removeEventListener('click', onMouseLeftClick);
   }

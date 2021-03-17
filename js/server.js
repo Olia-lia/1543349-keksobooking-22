@@ -9,10 +9,10 @@ const checkStatusRequest = (response) => {
 
   const { statusText, status } = response;
   const error = new Error (`${status} (${statusText})`);
-  return error;
+  throw error;
 }
 
-const getOffers = (onSuccess) => {
+const loadOffers = (onSuccess) => {
   fetch(`${BASE_URL}/data`)
 
     .then(checkStatusRequest)
@@ -41,4 +41,4 @@ const sendForm = (body) => {
 };
 
 
-export {getOffers, sendForm};
+export {loadOffers, sendForm};

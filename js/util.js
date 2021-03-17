@@ -1,3 +1,5 @@
+const PRIMARY_MOUSE_BUTTON = 0;
+
 const getRandomInteger = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -34,7 +36,7 @@ const isEscEvent = (evt) => {
 };
 
 const isMouseLeftEvent = (evt) => {
-  return evt.which === 1;
+  return evt.button === PRIMARY_MOUSE_BUTTON;
 }
 
 
