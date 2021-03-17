@@ -1,30 +1,21 @@
-import {addFormHandlers, addResutButtonHandler, setSelectedCapacityValue} from './form.js';
+import {addFormHandlers} from './form.js';
 import {disablePage, activatePage} from './page.js';
-import {initializeMap, renderOffersPin, resetMap} from './map.js';
-import {getOffers} from './server.js';
+import {initializeMap, renderOffersPin} from './map.js';
+import {setOffers} from './data-store.js';
+import {addFilterHandlers} from './filter.js';
 
-
-const resetPage = () => {
-  resetMap();
-  setSelectedCapacityValue();
-}
-
+/* global _:readonly */
+const RENDER_DELAY = 1000;
 
 disablePage();
 initializeMap(activatePage);
 
-getOffers((offers) => {
-  renderOffersPin(offers);
-});
+setOffers((offers) =>
 
+  addFilterHandlers(
+    _.debounce(renderOffersPin, RENDER_DELAY),
+    offers,
+  ));
 
 addFormHandlers();
-
-addResutButtonHandler(resetPage);
-
-
-
-
-
-
 

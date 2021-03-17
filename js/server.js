@@ -1,56 +1,43 @@
 import {showRequestError, showError, showSuccess} from './messages.js';
-const requestLink = 'https://22.javascript.pages.academy/keksobooking/data';
-const submitLink = 'https://22.javascript.pages.academy/keksobooking';
+
+const BASE_URL = 'https://22.javascript.pages.academy/keksobooking';
 
 const checkStatusRequest = (response) => {
   if (response.ok) {
     return response;
   }
 
-  else {
-    const { statusText, status } = response;
-    showRequestError(`${status}: ${statusText}`);
-  }
+  const { statusText, status } = response;
+  const error = new Error (`${status} (${statusText})`);
+  return error;
 }
 
-
 const getOffers = (onSuccess) => {
-  fetch(requestLink,
-  )
+  fetch(`${BASE_URL}/data`)
 
     .then(checkStatusRequest)
     .then((response) => response.json())
+
     .then((offers) => {
       onSuccess(offers);
     })
-    .catch((showRequestError) => (showRequestError));
-}
 
-const checkStatusSubmit = (response) => {
-  if (response.ok) {
-    showSuccess();
-  }
-
-  else {
-    showError();
-  }
+    .catch((error) => showRequestError(error));
 }
 
 
-const sendForm = (body, onSuccess) => {
-  fetch(submitLink,
+const sendForm = (body) => {
+  fetch(BASE_URL,
     {
       method: 'POST',
       body,
     },
   )
 
-    .then(checkStatusSubmit)
-    .then((result) => {onSuccess(result);
-    })
-    .catch((showError) => {
-      showError();
-    })
+    .then(checkStatusRequest)
+    .then((response) => showSuccess(response))
+    .catch((error) => showError(error));
+
 };
 
 

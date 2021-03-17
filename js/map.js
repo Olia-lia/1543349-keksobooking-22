@@ -40,6 +40,8 @@ const mainIconMarker = L.marker(
     icon: mainIcon,
   });
 
+//const markers = L.layerGroup([]);
+
 
 const onMarkerMove = (evt) => {
   const {lat, lng} = evt.target.getLatLng();
@@ -70,12 +72,14 @@ const initializeMap = (activateCallBack) => {
   setAddress (lat, lng);
 };
 
+let markers = [];
 
 const renderOffersPin = (offers) => {
-  offers.slice()
+  if (markers.length) {
+    markers.forEach((marker => marker.remove()));
+  }
 
-    .slice(0, TOTAL_OFFERS)
-
+  offers.slice(0, TOTAL_OFFERS)
     .forEach((offer) => {
       const icon = L.icon(PIN_OPTIONS);
 
@@ -88,6 +92,7 @@ const renderOffersPin = (offers) => {
           icon,
         },
       );
+      markers.push(marker);
       marker.addTo(map)
         .bindPopup(generateCard(offer));
     });

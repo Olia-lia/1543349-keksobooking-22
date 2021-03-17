@@ -33,4 +33,9 @@ const isEscEvent = (evt) => {
   return evt.key === ('Escape' || 'Esc');
 };
 
-export {getRandomInteger, getRandomFloat, getRandomArrayElement, getArrayOfRandomLength, isEscEvent};
+const isMouseLeftEvent = (evt) => {
+  return evt.which === 1;
+}
+
+
+export {getRandomInteger, getRandomFloat, getRandomArrayElement, getArrayOfRandomLength, isEscEvent, isMouseLeftEvent};

@@ -1,7 +1,5 @@
 import {sendForm} from './server.js';
-import {resetMap} from './map.js';
-import {isEscEvent} from './util.js';
-
+import {resetPage} from './messages.js';
 
 const form = document.querySelector('.ad-form');
 const formElements = form.querySelectorAll('.ad-form__element');
@@ -43,11 +41,11 @@ const activateForm = () => {
 
 const checkTitleValidity = () => {
   const valueLength = titleInput.value.length;
-  const validity = valueLength < MIN_TITLE_LENGTH ?
+  titleInput.setCustomValidity(valueLength < MIN_TITLE_LENGTH) ?
     titleInput.setCustomValidity(`Ещё ${MIN_TITLE_LENGTH - valueLength} символов`):
 
     titleInput.setCustomValidity('');
-  titleInput.reportValidity(validity);
+  titleInput.reportValidity();
 };
 
 const addTitleHandler = () => {
@@ -72,7 +70,7 @@ const onPriceInputSelect = () => {
 
 const checkPriceValidity = () => {
   const validity = priceInput.value > MAX_PRICE ?
-    priceInput.setCustomValidity(`Цена не должна превышать${MAX_PRICE}`):
+    priceInput.setCustomValidity(`Цена не должна превышать ${MAX_PRICE}`):
     priceInput.setCustomValidity('');
   priceInput.reportValidity(validity);
 };
@@ -106,7 +104,7 @@ const setSelectedCapacityValue = () => {
 const onRoomsInputSelect = () => {
 
   if (roomsInput.value === ROOMS_EXCEPTION && capacityInput.value != CAPACITY_EXCEPTION) {
-    capacityInput.setCustomValidity('не для гостей');
+    capacityInput.setCustomValidity('Выбранное количество комнат не для проживания гостей');
   }
 
   else if (capacityInput.value === CAPACITY_EXCEPTION && roomsInput.value !== ROOMS_EXCEPTION) {
@@ -126,7 +124,6 @@ const onRoomsInputSelect = () => {
 }
 
 
-
 const addRoomsInputHandler = () => {
   roomsInput.addEventListener('change', onRoomsInputSelect);
 };
@@ -140,62 +137,27 @@ const addRoomsInputHandlers = () => {
   addCapacityInputHandler();
 };
 
-
-const onResultEscKeydown = (evt) => {
-  if (isEscEvent(evt)) {
-    evt.preventDefault();
-    closeSubmitResult();
-  }
-};
-
-const addMessagesHandlers = () => {
-
-  const errorButton = document.querySelector('.error__button');
-
-  document.addEventListener('keydown', onResultEscKeydown);
-  document.addEventListener('click', closeSubmitResult);
-
-
-  if (document.body.querySelector('.submit-message')
-    .classList.contains('error')) {
-    errorButton.addEventListener('click', closeSubmitResult);
-  }
-};
-
-const closeSubmitResult = () => {
-
-  const resultItem = document.body.querySelector('.submit-message');
-  if (resultItem.classList.contains('success')) {
-    form.reset();
-    resetMap();
-    setSelectedCapacityValue();
-  }
-
-  document.body.removeChild(resultItem);
-
-  document.removeEventListener('keydown', onResultEscKeydown);
-  document.removeEventListener('click', closeSubmitResult);
+const resetForm = () => {
+  form.reset();
+  setSelectedCapacityValue();
 }
 
 
 const addSubmitHandler = () => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
+    form.reportValidity();
 
-    sendForm(new FormData(form),
-      () => addMessagesHandlers())
+    sendForm(new FormData(form))
   });
 }
 
-const addResutButtonHandler = (callback) => {
+const addResutButtonHandler = () => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
-    form.reset();
-    callback();
+    resetPage();
   });
 }
-
-
 const addFormHandlers = () => {
 
   setPricePlaceholder();
@@ -205,6 +167,7 @@ const addFormHandlers = () => {
   addTitleHandler();
   addRoomsInputHandlers();
   addSubmitHandler();
+  addResutButtonHandler()
 };
 
-export {disableForm, activateForm, addFormHandlers, setAddress, addResutButtonHandler, setSelectedCapacityValue};
+export {disableForm, activateForm, addFormHandlers, setAddress, resetForm};

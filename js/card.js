@@ -106,4 +106,4 @@ const renderCard = (cardElement) => {
   map.appendChild(cardElement);
 };
 
-export {generateCards, renderCard, generateCard, getType};
+export {generateCards, renderCard, generateCard};

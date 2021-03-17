@@ -1,58 +1,114 @@
 const filter = document.querySelector('.map__filters');
 const filterElements = filter.querySelectorAll('.map__filter');
-//const typeInputFilter = filter.querySelector('#housing-type');
-//const priceInputFilter = filter.querySelector('#housing-price');
+const typeInputFilter = filter.querySelector('#housing-type');
+const priceInputFilter = filter.querySelector('#housing-price');
+const guestsFilterSelect = filter.querySelector('#housing-guests');
+const roomsFilterSelect = filter.querySelector('#housing-rooms');
 
-//const MIN_LOW_PRICE = 0;
-//const MIN_MIDDLE_PRICE = 10000;
-//const MIN_MAX_PRICE = 50000;
-//Sconst MAX_PRICE = 1000000;
+const MIN_LOW_PRICE = 0;
+const MIN_MIDDLE_PRICE = 10000;
+const MIN_MAX_PRICE = 50000;
+const MAX_PRICE = 1000000;
 
-/*const makePriceRange = (start, end) => {
-  let range = [];
-  for (let i = start; i <= end; i+= 1) {
-    range.push(i)
-  }
-  return range;
-})/
 
-/*const FilterPrice = {
-  any: makePriceRange(MIN_LOW_PRICE, MAX_PRICE),
-  middle: makePriceRange(MIN_MIDDLE_PRICE, (MIN_MAX_PRICE - 1)),
-  low: makePriceRange(MIN_LOW_PRICE, (MIN_MIDDLE_PRICE - 1)),
-  high: makePriceRange(MIN_MAX_PRICE, MAX_PRICE),
-};)*/
+const FilterPrice = {
+  any: {
+    min: MIN_LOW_PRICE,
+    max: MAX_PRICE,
+  },
+  middle: {
+    min: MIN_MIDDLE_PRICE,
+    max: MIN_MAX_PRICE,
+  },
+  low: {
+    min: MIN_LOW_PRICE,
+    max: MIN_MIDDLE_PRICE - 1,
+  },
+  high: {
+    min: MIN_MAX_PRICE,
+    max: MAX_PRICE,
+  },
+};
+
+const FILTER_DEFAULT = 'any';
 
 
 const disableFilter = () => {
   filter.classList.add('map__filters--disabled');
   filterElements.forEach((filterElement) => {
-    filterElement.setAttribute('disabled', 'disabled');});
+    filterElement.setAttribute('disabled', 'disabled');
+  });
 }
 
 const activateFilter = () => {
   filter.classList.remove('map__filters--disabled');
   filterElements.forEach((filterElement) => {
-    filterElement.removeAttribute('disabled', 'disabled');});
-}
-
-
-/*const onPriceFilterSelect = (offers) => {
-  const priceRange = FilterPrice[priceInputFilter.value];
-  offers.forEach((offer) => {
-    if  (offer.price >= priceRange[0] && offer.price <= priceRange.length-1) {
-      return true;
-    }
+    filterElement.removeAttribute('disabled', 'disabled');
   });
 }
 
-const addPriceInputHandler = (offers, cb) => {
-  priceInputFilter.addEventListener('change', onPriceFilterSelect);
-  cb();
-}*/
+const checkOfferType= (type) => {
+  const selectedType = typeInputFilter.value;
+
+  return selectedType === FILTER_DEFAULT ||
+  selectedType === type;
+}
+
+const checkOfferPrice = (price) => {
+  const selectedPrice = priceInputFilter.value;
+  const priceRange = FilterPrice[priceInputFilter.value];
+  const {min, max} = priceRange;
+
+  return selectedPrice === FILTER_DEFAULT ||
+  (price >= min && price <= max);
+}
+
+const checkOfferFeatures  = (features) => {
+  const checkedFeatures = [...filter.querySelectorAll('.map__checkbox' && 'input:checked')].map(checkbox => checkbox.value);
+  return checkedFeatures.every((feature => features.includes(feature)));
+}
+
+const checkOffersRooms = (rooms) => {
+  const selectedRooms = roomsFilterSelect.value;
+
+  return rooms.toString() === selectedRooms || selectedRooms === FILTER_DEFAULT;
+}
+
+const checkOfferGuests = (guests) => {
+  const selectedGuests = guestsFilterSelect.value;
+  return selectedGuests === FILTER_DEFAULT || selectedGuests === guests.toString();
+}
+
+const checkOffer = (offer) => {
+
+  const {
+    type,
+    price,
+    rooms,
+    features,
+    guests,
+  } = offer.offer;
+
+  return checkOfferType(type) && checkOfferPrice(price) && checkOfferFeatures(features) && checkOffersRooms(rooms) && checkOfferGuests(guests)
+}
 
 
+const filterOffers = (offers) => {
+  const filteredOffers = offers.filter(checkOffer);
+  return filteredOffers;
+}
 
+const addFilterHandlers = (cb, offers) => {
+  const onFilterChange = () => {
+    const filteredOffers = filterOffers(offers);
+    cb(filteredOffers)
+  }
 
+  filter.addEventListener('change', onFilterChange);
+}
 
-export {disableFilter, activateFilter}
+const resetFilter = () => {
+  filter.reset();
+}
+
+export {disableFilter, activateFilter, addFilterHandlers, filterOffers, resetFilter}
