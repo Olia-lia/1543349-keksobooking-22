@@ -10,7 +10,7 @@ const getType = (type) => {
       return 'Квартира';
     case 'house':
       return 'Дом';
-    default: 'Любой тип';
+    default: 'Любой тип жилья ';
   }
 };
 

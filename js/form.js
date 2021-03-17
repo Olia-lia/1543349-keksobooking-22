@@ -1,3 +1,6 @@
+import {sendForm} from './server.js';
+import {resetPage} from './messages.js';
+
 const form = document.querySelector('.ad-form');
 const formElements = form.querySelectorAll('.ad-form__element');
 const typeSelect = form.querySelector('#type');
@@ -8,9 +11,12 @@ const titleInput = form.querySelector('#title');
 const addressInput = form.querySelector('#address');
 const roomsInput = form.querySelector('#room_number');
 const capacityInput = form.querySelector('#capacity');
+const resetButton = form.querySelector('.ad-form__reset');
 
-const ROOMS_EXCEPTION = 100;
+const ROOMS_EXCEPTION = '100';
+const CAPACITY_EXCEPTION = '0';
 const MIN_TITLE_LENGTH = 30;
+const MAX_PRICE = 1000000;
 
 const MinPriceNight = {
   bungalow: 0,
@@ -35,13 +41,10 @@ const activateForm = () => {
 
 const checkTitleValidity = () => {
   const valueLength = titleInput.value.length;
+  titleInput.setCustomValidity(valueLength < MIN_TITLE_LENGTH) ?
+    titleInput.setCustomValidity(`Ещё ${MIN_TITLE_LENGTH - valueLength} символов`):
 
-  if (valueLength < MIN_TITLE_LENGTH) {
-    titleInput.setCustomValidity('Ещё ' + (MIN_TITLE_LENGTH - valueLength) +' символов');
-  }
-  else {
     titleInput.setCustomValidity('');
-  }
   titleInput.reportValidity();
 };
 
@@ -49,7 +52,7 @@ const addTitleHandler = () => {
   titleInput.addEventListener('input', checkTitleValidity);
 };
 
-const getAddress = (lat, lng) => {
+const setAddress = (lat, lng) => {
   addressInput.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 }
 
@@ -65,11 +68,21 @@ const onPriceInputSelect = () => {
   priceInput.placeholder = minPrice;
 }
 
-const addPriceListener = () => {
+const checkPriceValidity = () => {
+  const validity = priceInput.value > MAX_PRICE ?
+    priceInput.setCustomValidity(`Цена не должна превышать ${MAX_PRICE}`):
+    priceInput.setCustomValidity('');
+  priceInput.reportValidity(validity);
+};
+
+
+const addPriceInputHandler = () => {
   priceInput.setAttribute('min', MinPriceNight[typeSelect.value]);
 
   typeSelect.addEventListener('change', onPriceInputSelect);
+  priceInput.addEventListener('input', checkPriceValidity);
 };
+
 
 const addCheckTimeHandler = () => {
 
@@ -86,64 +99,75 @@ const addCheckTimeHandler = () => {
 
 const setSelectedCapacityValue = () => {
   capacityInput.value = roomsInput.value;
-
 };
 
-const onRoomsInputselect = () => {
-  const maxCapacityValue = roomsInput.value;
-  capacityInput.value = maxCapacityValue;
-  for (let i = 0; i < capacityInput.children.length; i++) {
-    capacityInput.children[i].setAttribute('disabled', 'disabled');
+const onRoomsInputSelect = () => {
 
-    if (maxCapacityValue == ROOMS_EXCEPTION) {
-      capacityInput.children[capacityInput.children.length -1].disabled = false;
-    }
-
-    else if (capacityInput.children[i].value <= maxCapacityValue && capacityInput.children[i].value != 0) {
-      capacityInput.children[i].disabled = false;
-    }
+  if (roomsInput.value === ROOMS_EXCEPTION && capacityInput.value != CAPACITY_EXCEPTION) {
+    capacityInput.setCustomValidity('Выбранное количество комнат не для проживания гостей');
   }
+
+  else if (capacityInput.value === CAPACITY_EXCEPTION && roomsInput.value !== ROOMS_EXCEPTION) {
+    roomsInput.setCustomValidity('100 комнат');
+  }
+
+  else if (roomsInput.value < capacityInput.value) {
+    capacityInput.setCustomValidity('Количество гостей не может превышать количество комнат');
+  }
+
+  else {capacityInput.setCustomValidity('');
+    roomsInput.setCustomValidity('');
+  }
+
+  capacityInput.reportValidity();
+  roomsInput.reportValidity();
 }
+
 
 const addRoomsInputHandler = () => {
-  roomsInput.addEventListener('change', onRoomsInputselect);
+  roomsInput.addEventListener('change', onRoomsInputSelect);
 };
 
-const removeRoomsInputHandler = () => {
-  for (let i = 0; i < capacityInput.children.length; i++) {
-    capacityInput.children[i].disabled = false;
-  }
+const addCapacityInputHandler = () => {
+  capacityInput.addEventListener('change', onRoomsInputSelect);
 };
-
-const addCapacityInputHandlers = () => {
-  capacityInput.addEventListener('blur', removeRoomsInputHandler);
-
-  capacityInput.addEventListener('change', () => {
-    if (capacityInput.value > roomsInput.value) {
-      roomsInput.setCustomValidity('Количество гостей не может превышать количество комнат');
-    }
-    roomsInput.reportValidity();
-  });
-};
-
-const onRoomsInputRemoveEvent = () => {
-  roomsInput.addEventListener('onchange', removeRoomsInputHandler)
-}
 
 const addRoomsInputHandlers = () => {
   addRoomsInputHandler();
-  addCapacityInputHandlers();
-  onRoomsInputRemoveEvent();
+  addCapacityInputHandler();
 };
 
-const addFormHandlers = () => {
-  setPricePlaceholder();
+const resetForm = () => {
+  form.reset();
   setSelectedCapacityValue();
-  addPriceListener();
+}
+
+
+const addSubmitHandler = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    form.reportValidity();
+
+    sendForm(new FormData(form))
+  });
+}
+
+const addResutButtonHandler = () => {
+  resetButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    resetPage();
+  });
+}
+const addFormHandlers = () => {
+
+  setPricePlaceholder();
+  setSelectedCapacityValue()
+  addPriceInputHandler();
   addCheckTimeHandler();
   addTitleHandler();
   addRoomsInputHandlers();
+  addSubmitHandler();
+  addResutButtonHandler()
 };
 
-
-export {disableForm, activateForm, addFormHandlers, getAddress};
+export {disableForm, activateForm, addFormHandlers, setAddress, resetForm};

@@ -1,7 +1,9 @@
 import {generateCard} from './card.js';
-import {getAddress} from './form.js';
+import {setAddress} from './form.js';
 
 /* global L:readonly */
+
+const TOTAL_OFFERS = 10;
 
 const INITIAL_MAP_OPTIONS = {
   lat: 35.68950,
@@ -30,6 +32,7 @@ const PIN_OPTIONS = {
 const map = L.map('map-canvas');
 
 const mainIcon = L.icon(MAIN_PIN_OPTIONS);
+
 const mainIconMarker = L.marker(
   INITIAL_MAIN_PIN_POSITION,
   {
@@ -37,19 +40,20 @@ const mainIconMarker = L.marker(
     icon: mainIcon,
   });
 
+//const markers = L.layerGroup([]);
+
+
 const onMarkerMove = (evt) => {
   const {lat, lng} = evt.target.getLatLng();
-  getAddress(lat, lng);
+  setAddress(lat, lng);
 };
 
-const addMarkerMoveHandlers = () => {
-  mainIconMarker.on('drag', onMarkerMove);
-  mainIconMarker.on('moveend', onMarkerMove);
-}
+const initializeMap = (activateCallBack) => {
 
-const initializeMap = (activate) => {
+  map.on('load', ()  => {
+    activateCallBack();
+  });
 
-  map.onload;
   map.setView(INITIAL_MAP_OPTIONS, ZOOM_MAP);
 
   L.tileLayer(
@@ -61,30 +65,43 @@ const initializeMap = (activate) => {
 
 
   mainIconMarker.addTo(map);
-  const {lat, lng} = INITIAL_MAIN_PIN_POSITION;
-  getAddress (lat, lng);
+  mainIconMarker.on('drag', onMarkerMove);
+  mainIconMarker.on('moveend', onMarkerMove);
 
-  addMarkerMoveHandlers();
-  activate();
+  const {lat, lng} = INITIAL_MAIN_PIN_POSITION;
+  setAddress (lat, lng);
 };
 
+let markers = [];
 
 const renderOffersPin = (offers) => {
-  offers.forEach((offer) => {
-    const icon = L.icon(PIN_OPTIONS);
+  if (markers.length) {
+    markers.forEach((marker => marker.remove()));
+  }
 
-    const marker = L.marker(
-      {
-        lat: offer.location.x,
-        lng: offer.location.y,
-      },
-      {
-        icon,
-      },
-    );
-    marker.addTo(map)
-      .bindPopup(generateCard(offer));
-  });
+  offers.slice(0, TOTAL_OFFERS)
+    .forEach((offer) => {
+      const icon = L.icon(PIN_OPTIONS);
+
+      const marker = L.marker(
+        {
+          lat: offer.location.lat,
+          lng: offer.location.lng,
+        },
+        {
+          icon,
+        },
+      );
+      markers.push(marker);
+      marker.addTo(map)
+        .bindPopup(generateCard(offer));
+    });
 }
 
-export {initializeMap, renderOffersPin};
+const resetMap = () => {
+  mainIconMarker.setLatLng(INITIAL_MAIN_PIN_POSITION);
+  initializeMap();
+}
+
+
+export {initializeMap, renderOffersPin, resetMap};
