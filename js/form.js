@@ -1,5 +1,4 @@
 import {sendForm} from './server.js';
-import {resetPage} from './page.js';
 
 const form = document.querySelector('.ad-form');
 const formElements = form.querySelectorAll('.ad-form__element');
@@ -12,11 +11,20 @@ const addressInput = form.querySelector('#address');
 const roomsInput = form.querySelector('#room_number');
 const capacityInput = form.querySelector('#capacity');
 const resetButton = form.querySelector('.ad-form__reset');
+const avatarField = form.querySelector('.ad-form-header__input');
+const avatarPreviewContainer = form.querySelector('.ad-form-header__preview');
+const avatarPreview = avatarPreviewContainer.querySelector('img');
+const housingPhotoField = form.querySelector('.ad-form__input');
+const housingPhotoPreview = form.querySelector('.ad-form__photo');
 
+
+const AVATAR_PREVIEW_DEFAULT = avatarPreview.src;
 const ROOMS_EXCEPTION = '100';
 const CAPACITY_EXCEPTION = '0';
 const MIN_TITLE_LENGTH = 30;
 const MAX_PRICE = 1000000;
+
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 const MinPriceNight = {
   bungalow: 0,
@@ -24,6 +32,7 @@ const MinPriceNight = {
   house: 5000,
   palace: 10000,
 };
+
 
 const disableForm = () => {
   form.classList.add('ad-form--disabled');
@@ -95,8 +104,6 @@ const addCheckTimeHandler = () => {
   });
 };
 
-
-
 const setSelectedCapacityValue = () => {
   capacityInput.value = roomsInput.value;
 };
@@ -137,27 +144,85 @@ const addRoomsInputHandlers = () => {
   addCapacityInputHandler();
 };
 
+
+const uploadImage = (evt, imageContainer) => {
+
+  const photo = evt.files[0];
+  const fileName = photo.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => {
+    return fileName.endsWith(it);
+  });
+
+  if (matches) {
+    const reader = new FileReader();
+    let preview = imageContainer.querySelector('img');
+    if (preview === null) {
+      preview = document.createElement('img');
+
+      imageContainer.style.display = 'flex';
+      imageContainer.style.alignItems = 'center';
+      imageContainer.style.justifyContent = 'center';
+
+      imageContainer.append(preview);
+    }
+
+    reader.addEventListener('load', () => {
+      preview.src = reader.result
+    });
+
+    reader.readAsDataURL(photo);
+  }
+};
+
+const uploadPhotoAvatar = () => {
+  uploadImage(avatarField, avatarPreviewContainer);
+};
+
+const uploadHousingPhoto = () => {
+  uploadImage(housingPhotoField, housingPhotoPreview);
+};
+
+
+
+const addUploadPhotoHandlers = () => {
+  avatarField.addEventListener('change', uploadPhotoAvatar);
+  housingPhotoField.addEventListener('change', uploadHousingPhoto);
+}
+
+const resetPreviews = () => {
+  avatarPreview.src = AVATAR_PREVIEW_DEFAULT;
+
+  if (housingPhotoPreview.querySelector('img')) {
+    housingPhotoPreview.style = false;
+    housingPhotoPreview.querySelector('img').remove();
+  }
+
+}
+
 const resetForm = () => {
   form.reset();
+  resetPreviews();
   setSelectedCapacityValue();
 }
 
 
-const addSubmitHandler = () => {
+const addSubmitHandler = (onSuccess) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
-    if( form.reportValidity()) {
-      sendForm(new FormData(form))
+    if (form.reportValidity()) {
+      sendForm(new FormData(form), onSuccess)
     }
   });
 }
 
-const addResutButtonHandler = () => {
+const addResutButtonHandler = (cb) => {
   resetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
-    resetPage();
+    cb();
   });
 }
+
 const addFormHandlers = () => {
 
   setPricePlaceholder();
@@ -166,8 +231,7 @@ const addFormHandlers = () => {
   addCheckTimeHandler();
   addTitleHandler();
   addRoomsInputHandlers();
-  addSubmitHandler();
-  addResutButtonHandler()
+  addUploadPhotoHandlers();
 };
 
-export {disableForm, activateForm, addFormHandlers, setAddress, resetForm};
+export {disableForm, activateForm, addFormHandlers, setAddress, resetForm, addResutButtonHandler, addSubmitHandler};
