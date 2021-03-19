@@ -1,7 +1,4 @@
 import {isEscEvent, isMouseLeftEvent} from './util.js';
-import {resetPage} from './page.js';
-
-const closeButton = document.querySelector('.error__button');
 
 const SHOW_REQUEST_TIME = 10000;
 
@@ -43,12 +40,14 @@ const showMessage = (messageType) => {
   const fragment = document.createDocumentFragment();
   fragment.append(resultTemplate);
 
+  const closeButton = resultTemplate.querySelector('.error__button')
 
   const removeTemplate = () => {
     resultTemplate.remove();
 
-    resultTemplate.classList.contains(MessageTypes.success) ? resetPage() :
+    if (closeButton) {
       closeButton.removeEventListener('click', onButtonCloseClick);
+    }
 
     document.removeEventListener('keydown', onDocumentEscapePressed);
     document.removeEventListener('click', onMouseLeftClick);
@@ -79,7 +78,7 @@ const showMessage = (messageType) => {
   document.addEventListener('keydown', onDocumentEscapePressed);
   document.addEventListener('click', onMouseLeftClick);
 
-  if (resultTemplate.classList.contains('error')) {
+  if (closeButton) {
     closeButton.addEventListener('click', onButtonCloseClick);
   }
 
@@ -91,4 +90,4 @@ const showError = (message) => showMessage(MessageTypes.error, message);
 
 
 
-export {showRequestError, showSuccess, showError, resetPage}
+export {showRequestError, showSuccess, showError}

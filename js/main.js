@@ -1,9 +1,12 @@
-import {addFormHandlers} from './form.js';
+import {addFormHandlers, addResutButtonHandler, addSubmitHandler} from './form.js';
 import {disablePage, activatePage} from './page.js';
 import {initializeMap, renderOffersPin} from './map.js';
 import {loadOffers} from './server.js'
 import {setOffers} from './data-store.js';
+import {resetPage} from './page.js';
 import {addFilterHandlers} from './filter.js';
+
+import './messages.js'
 
 /* global _:readonly */
 const DEBOUNCE_TIME = 1000;
@@ -20,5 +23,6 @@ loadOffers((offers) => {
     _.debounce(renderOffersPin, DEBOUNCE_TIME));
 })
 
-
 addFormHandlers();
+addResutButtonHandler(resetPage);
+addSubmitHandler(resetPage);

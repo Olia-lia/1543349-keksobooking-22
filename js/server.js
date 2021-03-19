@@ -26,7 +26,7 @@ const loadOffers = (onSuccess) => {
 }
 
 
-const sendForm = (body) => {
+const sendForm = (body, onSuccess) => {
   fetch(BASE_URL,
     {
       method: 'POST',
@@ -35,9 +35,9 @@ const sendForm = (body) => {
   )
 
     .then(checkStatusRequest)
-    .then((response) => showSuccess(response))
-    .catch((error) => showError(error));
-
+    .then((response) => {showSuccess(response);
+      onSuccess()})
+    .catch((error) => showError(error))
 };
 
 
