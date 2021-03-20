@@ -18,7 +18,7 @@ const housingPhotoField = form.querySelector('.ad-form__input');
 const housingPhotoPreview = form.querySelector('.ad-form__photo');
 
 
-const AVATAR_PREVIEW_DEFAULT = avatarPreview.src;
+const avatarPreviewDefault = avatarPreview.src;
 const ROOMS_EXCEPTION = '100';
 const CAPACITY_EXCEPTION = '0';
 const MIN_TITLE_LENGTH = 30;
@@ -145,7 +145,7 @@ const addRoomsInputHandlers = () => {
 };
 
 
-const uploadImage = (evt, imageContainer) => {
+const uploadImage = (evt, addhandler) => {
 
   const photo = evt.files[0];
   const fileName = photo.name.toLowerCase();
@@ -156,45 +156,48 @@ const uploadImage = (evt, imageContainer) => {
 
   if (matches) {
     const reader = new FileReader();
-    let preview = imageContainer.querySelector('img');
-    if (preview === null) {
-      preview = document.createElement('img');
-
-      imageContainer.style.display = 'flex';
-      imageContainer.style.alignItems = 'center';
-      imageContainer.style.justifyContent = 'center';
-
-      imageContainer.append(preview);
-    }
-
-    reader.addEventListener('load', () => {
-      preview.src = reader.result
-    });
-
+    reader.addEventListener('load', addhandler)
     reader.readAsDataURL(photo);
   }
 };
 
-const uploadPhotoAvatar = () => {
-  uploadImage(avatarField, avatarPreviewContainer);
+const onHousingPhotosChange = (evt) => {
+  let preview = housingPhotoPreview.querySelector('img');
+  if (preview === null) {
+    preview = document.createElement('img');
+
+    housingPhotoPreview.style.display = 'flex';
+    housingPhotoPreview.style.alignItems = 'center';
+    housingPhotoPreview.style.justifyContent = 'center';
+    preview.style.maxWidth = '100%';
+
+    housingPhotoPreview.append(preview);
+  }
+  preview.src = evt.target.result;
+}
+
+const onAvatarChange = (evt) => {
+  const preview = avatarPreviewContainer.querySelector('img');
+  preview.src = evt.target.result;
+}
+
+const uploadImageAvatar = () => {
+  uploadImage(avatarField, onAvatarChange);
 };
 
 const uploadHousingPhoto = () => {
-  uploadImage(housingPhotoField, housingPhotoPreview);
+  uploadImage(housingPhotoField, onHousingPhotosChange);
 };
 
-
-
-const addUploadPhotoHandlers = () => {
-  avatarField.addEventListener('change', uploadPhotoAvatar);
+const addUploadImagesHandlers = () => {
+  avatarField.addEventListener('change', uploadImageAvatar);
   housingPhotoField.addEventListener('change', uploadHousingPhoto);
 }
 
 const resetPreviews = () => {
-  avatarPreview.src = AVATAR_PREVIEW_DEFAULT;
+  avatarPreview.src = avatarPreviewDefault;
 
   if (housingPhotoPreview.querySelector('img')) {
-    housingPhotoPreview.style = false;
     housingPhotoPreview.querySelector('img').remove();
   }
 
@@ -231,7 +234,7 @@ const addFormHandlers = () => {
   addCheckTimeHandler();
   addTitleHandler();
   addRoomsInputHandlers();
-  addUploadPhotoHandlers();
+  addUploadImagesHandlers();
 };
 
 export {disableForm, activateForm, addFormHandlers, setAddress, resetForm, addResutButtonHandler, addSubmitHandler};
