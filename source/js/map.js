@@ -40,9 +40,6 @@ const mainIconMarker = L.marker(
     icon: mainIcon,
   });
 
-//const markers = L.layerGroup([]);
-
-
 const onMarkerMove = (evt) => {
   const {lat, lng} = evt.target.getLatLng();
   setAddress(lat, lng);

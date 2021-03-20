@@ -1,4 +1,4 @@
-import {showRequestError, showError, showSuccess} from './messages.js';
+import {showRequestError, showError} from './messages.js';
 
 const BASE_URL = 'https://22.javascript.pages.academy/keksobooking';
 
@@ -35,8 +35,7 @@ const sendForm = (body, onSuccess) => {
   )
 
     .then(checkStatusRequest)
-    .then((response) => {showSuccess(response);
-      onSuccess()})
+    .then((result) => onSuccess(result))
     .catch((error) => showError(error))
 };
 
