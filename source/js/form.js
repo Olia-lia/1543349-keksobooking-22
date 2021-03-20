@@ -87,10 +87,10 @@ const checkPriceValidity = () => {
 
 const addPriceInputHandler = () => {
   priceInput.setAttribute('min', MinPriceNight[typeSelect.value]);
-
   typeSelect.addEventListener('change', onPriceInputSelect);
   priceInput.addEventListener('input', checkPriceValidity);
 };
+
 
 
 const addCheckTimeHandler = () => {
@@ -110,7 +110,7 @@ const setSelectedCapacityValue = () => {
 
 const onRoomsInputSelect = () => {
 
-  if (roomsInput.value === ROOMS_EXCEPTION && capacityInput.value != CAPACITY_EXCEPTION) {
+  if (roomsInput.value === ROOMS_EXCEPTION && capacityInput.value !== CAPACITY_EXCEPTION) {
     capacityInput.setCustomValidity('Выбранное количество комнат не для проживания гостей');
   }
 
@@ -145,7 +145,7 @@ const addRoomsInputHandlers = () => {
 };
 
 
-const uploadImage = (evt, addhandler) => {
+const uploadImage = (evt, loadhandler) => {
 
   const photo = evt.files[0];
   const fileName = photo.name.toLowerCase();
@@ -156,7 +156,7 @@ const uploadImage = (evt, addhandler) => {
 
   if (matches) {
     const reader = new FileReader();
-    reader.addEventListener('load', addhandler)
+    reader.addEventListener('load', loadhandler)
     reader.readAsDataURL(photo);
   }
 };

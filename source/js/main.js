@@ -24,5 +24,7 @@ loadOffers((offers) => {
 
 addFormHandlers();
 addResutButtonHandler(resetPage);
-addSubmitHandler(() => {showSuccess();
-  resetPage()});
+addSubmitHandler(() => {
+  showSuccess();
+  resetPage();
+});

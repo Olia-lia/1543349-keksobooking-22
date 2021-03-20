@@ -2,7 +2,6 @@
   "name": "keksobooking",
   "version": "22.0.0",
   "private": true,
-  "type": "module",
   "description": "Личный проект «Кексобукинг» от HTML Academy",
   "repository": {
     "type": "git",
@@ -21,13 +20,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "leaflet": "^1.7.1",
-    "lodash": "^4.17.21"
+    "lodash": "4.17.21"
   },
   "scripts": {
     "build": "webpack --mode production",
     "start": "browser-sync start --server \"build/\" --no-ui --files \"source/**/*.js\"",
-    "test": "eslint js/"
+    "test": "eslint source/js/"
   },
   "engines": {
     "node": ">=12.0.0"
