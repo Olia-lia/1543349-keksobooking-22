@@ -2,8 +2,8 @@ import {getOffers} from './data-store.js';
 
 const filter = document.querySelector('.map__filters');
 const filterElements = filter.querySelectorAll('.map__filter');
-const typeInputFilter = filter.querySelector('#housing-type');
-const priceInputFilter = filter.querySelector('#housing-price');
+const typeFilterSelect = filter.querySelector('#housing-type');
+const priceFilterSelect = filter.querySelector('#housing-price');
 const guestsFilterSelect = filter.querySelector('#housing-guests');
 const roomsFilterSelect = filter.querySelector('#housing-rooms');
 
@@ -49,15 +49,15 @@ const activateFilter = () => {
 }
 
 const checkOfferType= (type) => {
-  const selectedType = typeInputFilter.value;
+  const selectedType = typeFilterSelect.value;
 
   return selectedType === FILTER_DEFAULT ||
   selectedType === type;
 }
 
 const checkOfferPrice = (price) => {
-  const selectedPrice = priceInputFilter.value;
-  const priceRange = FilterPrice[priceInputFilter.value];
+  const selectedPrice = priceFilterSelect.value;
+  const priceRange = FilterPrice[priceFilterSelect.value];
   const {min, max} = priceRange;
 
   return selectedPrice === FILTER_DEFAULT ||

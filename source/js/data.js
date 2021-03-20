@@ -10,7 +10,7 @@ const TITLES = [
 const TYPES = ['palace', 'flat', 'house', 'bungalow'];
 const CHECKS = ['12:00', '13:00', '14:00'];
 const FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-const DESCRIPTION = [
+const DESCRIPTIONS = [
   'Имеется все необходимое для комфортного проживания: холодильник, кухня, зубные щетки бонусом',
   'Чисто, стильно, комфортно. Всегда есть горячая вода',
 ];
@@ -41,7 +41,7 @@ const generateRentalOffer = () => {
   const guests = getRandomInteger(MIN_GUESTS, MAX_GUESTS);
   const checkTime = getRandomArrayElement(CHECKS);
   const features = getArrayOfRandomLength(FEATURES);
-  const description = getRandomArrayElement(DESCRIPTION);
+  const description = getRandomArrayElement(DESCRIPTIONS);
   const photos = getArrayOfRandomLength(PHOTOS);
   const location = {
     x: getRandomFloat(MIN_LATITUDE, MAX_LATITUDE, 5),
