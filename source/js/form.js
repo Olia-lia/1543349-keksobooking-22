@@ -37,14 +37,14 @@ const MinPriceNight = {
 const disableForm = () => {
   form.classList.add('ad-form--disabled');
   formElements.forEach((formElement) => {
-    formElement.setAttribute('disabled', 'disabled');
+    formElement.disabled === 'true';
   });
 };
 
 const activateForm = () => {
   form.classList.remove('ad-form--disabled');
   formElements.forEach((formElement) => {
-    formElement.removeAttribute('disabled', 'disabled');
+    formElement.disabled === 'false';
   });
 }
 
@@ -86,11 +86,10 @@ const checkPriceValidity = () => {
 
 
 const addPriceInputHandler = () => {
-  priceInput.setAttribute('min', MinPriceNight[typeSelect.value]);
+  priceInput.min = MinPriceNight[typeSelect.value];
   typeSelect.addEventListener('change', onPriceInputSelect);
   priceInput.addEventListener('input', checkPriceValidity);
 };
-
 
 
 const addCheckTimeHandler = () => {
@@ -145,7 +144,7 @@ const addRoomsInputHandlers = () => {
 };
 
 
-const uploadImage = (evt, loadhandler) => {
+const uploadImage = (evt, cb) => {
 
   const photo = evt.files[0];
   const fileName = photo.name.toLowerCase();
@@ -156,7 +155,7 @@ const uploadImage = (evt, loadhandler) => {
 
   if (matches) {
     const reader = new FileReader();
-    reader.addEventListener('load', loadhandler)
+    reader.addEventListener('load', cb)
     reader.readAsDataURL(photo);
   }
 };

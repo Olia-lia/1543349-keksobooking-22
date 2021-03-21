@@ -37,14 +37,14 @@ const FILTER_DEFAULT = 'any';
 const disableFilter = () => {
   filter.classList.add('map__filters--disabled');
   filterElements.forEach((filterElement) => {
-    filterElement.setAttribute('disabled', 'disabled');
+    filterElement.disabled === 'true';
   });
 }
 
 const activateFilter = () => {
   filter.classList.remove('map__filters--disabled');
   filterElements.forEach((filterElement) => {
-    filterElement.removeAttribute('disabled', 'disabled');
+    filterElement.disabled === 'false';
   });
 }
 
@@ -66,8 +66,8 @@ const checkOfferPrice = (price) => {
 
 
 const checkOfferFeatures  = (features) => {
-  const checkedFeatures = [...filter.querySelectorAll('.map__checkbox' && 'input:checked')].map(checkbox => checkbox.value);
-  return checkedFeatures.every((feature => features.includes(feature)));
+  const checkedFeatures = [...filter.querySelectorAll('.map__checkbox' && 'input:checked')];
+  return checkedFeatures.every((feature => features.includes(feature.value)));
 }
 
 const checkOffersRooms = (rooms) => {

@@ -100,10 +100,5 @@ const generateCards = (offers) =>  {
   return cardElements;
 };
 
-const map = document.querySelector('.map__canvas');
 
-const renderCard = (cardElement) => {
-  map.appendChild(cardElement);
-};
-
-export {generateCards, renderCard, generateCard};
+export {generateCards, generateCard};
